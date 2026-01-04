@@ -1,0 +1,8 @@
+__pycache__
+venv
+*.session
+db.sqlite3
+exel_base.xlsx
+test.py
+Token.py
+Media.py
