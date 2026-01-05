@@ -179,7 +179,9 @@ async def get_name(message: Message, state: FSMContext):
 async def message_push_user():
     groups = await rq.get_data_all_groups()
     if start_spaming == False:
-        start_spaming == True
+        print("Начал рассылку")
+        global start_spaming
+        start_spaming = True
         acc_data = await rq.get_data_acconts()
         acc_data = acc_data.__dict__
         userbot = Client(name=str(acc_data["id"]),
@@ -193,13 +195,16 @@ async def message_push_user():
             start_data = datetime.now()
             if grop["next_message"] < start_data:
                 if grop["work_type"]:
+                    print(f"Начал рассылку в группу - {grop["url"]}")
                     next_message = datetime.now() + timedelta(minutes=int(grop["count_minuts"]))
                     await rq.redact_data_group(grop["id"], "next_message", next_message)
                     try:
                         await userbot.send_message(chat_id=grop["url"], text=grop["message"])
+                        print(f"успешно отправил в группу - {grop["url"]}")
                     except:
+                        print(f"Ошибка при отправке в группу - {grop["url"]}")
                         continue
                     await bot.send_message(admin_id, Text.send_suksess.format(grop["url"], grop["message"]))
 
         await userbot.stop()
-        start_spaming == False
+        start_spaming = False
