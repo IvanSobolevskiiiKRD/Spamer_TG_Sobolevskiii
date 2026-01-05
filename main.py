@@ -16,7 +16,7 @@ async def main():
     await async_main()
 
     scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
-    scheduler.add_job(start_handlers.message_push_user, trigger="interval", seconds=10, max_instances=1, coalesce=True)
+    scheduler.add_job(start_handlers.message_push_user, trigger="interval", seconds=300, max_instances=1, coalesce=True)
     scheduler.start()
 
     dp = Dispatcher()
