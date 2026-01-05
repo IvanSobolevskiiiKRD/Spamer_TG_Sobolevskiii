@@ -181,6 +181,9 @@ async def message_push_user():
         start_data = datetime.now()
         if grop["next_message"] < start_data:
             if grop["work_type"]:
+                next_message = datetime.now() + timedelta(minutes=int(grop["count_minuts"]))
+                await rq.redact_data_group(grop["id"], "next_message", next_message)
+
                 acc_data = await rq.get_data_acconts()
                 acc_data = acc_data.__dict__
                 userbot = Client(name=str(acc_data["id"]),
@@ -189,8 +192,9 @@ async def message_push_user():
                          phone_number=acc_data["phone_number"])
 
                 await userbot.start()
-                await userbot.send_message(chat_id=grop["url"], text=grop["message"])
+                try:
+                    await userbot.send_message(chat_id=grop["url"], text=grop["message"])
+                    await bot.send_message(admin_id, Text.send_suksess.format(grop["url"], grop["message"]))
+                except Exception as e:
+                    print(f"Возникла ошибка: {e}")
                 await userbot.stop()
-                next_message = datetime.now() + timedelta(minutes=int(grop["count_minuts"]))
-                await rq.redact_data_group(grop["id"], "next_message", next_message)
-                await bot.send_message(admin_id, Text.send_suksess.format(grop["url"], grop["message"]))

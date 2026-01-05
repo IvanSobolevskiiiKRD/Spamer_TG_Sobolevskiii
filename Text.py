@@ -111,3 +111,7 @@ start_spam_text = """
 stop_text = """
 Успешно остановаил рассылку - /start
 """
+
+chat_already_in_list = """
+Данный чат уже находится в списке - /start
+"""

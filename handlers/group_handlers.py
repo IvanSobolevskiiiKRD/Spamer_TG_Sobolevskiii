@@ -110,8 +110,16 @@ async def add_account(callback: CallbackQuery, state: FSMContext):
 async def get_name(message: Message, state: FSMContext):
     data = await rq.get_data_group()
     data = data.__dict__
-    await rq.set_account_group(message.text, data["count_minuts"], data["message"])
-    await message.answer(text=Text.add_group_3)
+    data_all = await rq.get_data_all_groups()
+    in_groups_new_url = False
+    for group in data_all:
+        if group.url == message.text:
+            in_groups_new_url = True
+    if in_groups_new_url:
+        await message.answer(text=Text.chat_already_in_list)
+    else:
+        await rq.set_account_group(message.text, data["count_minuts"], data["message"])
+        await message.answer(text=Text.add_group_3)
     await state.clear()
 
 @router.message(Add_Group.minuts)
