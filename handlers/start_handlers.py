@@ -195,7 +195,10 @@ async def message_push_user():
                 if grop["work_type"]:
                     next_message = datetime.now() + timedelta(minutes=int(grop["count_minuts"]))
                     await rq.redact_data_group(grop["id"], "next_message", next_message)
-                    await userbot.send_message(chat_id=grop["url"], text=grop["message"])
+                    try:
+                        await userbot.send_message(chat_id=grop["url"], text=grop["message"])
+                    except:
+                        continue
                     await bot.send_message(admin_id, Text.send_suksess.format(grop["url"], grop["message"]))
 
         await userbot.stop()
