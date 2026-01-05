@@ -14,10 +14,8 @@ import database.requests as rq
 import function.create_session as CreateSes
 from main import bot
 import Media
-from main import admin_id
+from main import admin_id, start_spaming
 from datetime import timedelta
-
-start_spaming = False
 
 router = Router()
 

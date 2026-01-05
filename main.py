@@ -9,6 +9,7 @@ from handlers import start_handlers, group_handlers
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 admin_id = '816427281'
+start_spaming = False
 
 
 async def main():
