@@ -175,10 +175,10 @@ async def get_name(message: Message, state: FSMContext):
 #    print(message)
 
 async def message_push_user():
+    global start_spaming
     groups = await rq.get_data_all_groups()
     if start_spaming == False:
         print("Начал рассылку")
-        global start_spaming
         start_spaming = True
         acc_data = await rq.get_data_acconts()
         acc_data = acc_data.__dict__
