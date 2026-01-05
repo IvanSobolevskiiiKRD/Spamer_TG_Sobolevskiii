@@ -17,6 +17,8 @@ import Media
 from main import admin_id
 from datetime import timedelta
 
+start_spaming = False
+
 router = Router()
 
 class Add_account(StatesGroup):
@@ -176,24 +178,25 @@ async def get_name(message: Message, state: FSMContext):
 
 async def message_push_user():
     groups = await rq.get_data_all_groups()
-    for grop in groups:
-        grop = grop.__dict__
-        start_data = datetime.now()
-        if grop["next_message"] < start_data:
-            if grop["work_type"]:
-                next_message = datetime.now() + timedelta(minutes=int(grop["count_minuts"]))
-                await rq.redact_data_group(grop["id"], "next_message", next_message)
+    if start_spaming == False:
+        start_spaming == True
+        acc_data = await rq.get_data_acconts()
+        acc_data = acc_data.__dict__
+        userbot = Client(name=str(acc_data["id"]),
+                 api_id=acc_data["api_id"],
+                 api_hash=acc_data["api_hash"],
+                 phone_number=acc_data["phone_number"])
+        await userbot.start()
 
-                acc_data = await rq.get_data_acconts()
-                acc_data = acc_data.__dict__
-                userbot = Client(name=str(acc_data["id"]),
-                         api_id=acc_data["api_id"],
-                         api_hash=acc_data["api_hash"],
-                         phone_number=acc_data["phone_number"])
+        for grop in groups:
+            grop = grop.__dict__
+            start_data = datetime.now()
+            if grop["next_message"] < start_data:
+                if grop["work_type"]:
+                    next_message = datetime.now() + timedelta(minutes=int(grop["count_minuts"]))
+                    await rq.redact_data_group(grop["id"], "next_message", next_message)
+                    await userbot.send_message(chat_id=grop["url"], text=grop["message"])
+                    await bot.send_message(admin_id, Text.send_suksess.format(grop["url"], grop["message"]))
 
-                await userbot.start()
-                await userbot.send_message(chat_id=grop["url"], text=grop["message"])
-                await bot.send_message(admin_id, Text.send_suksess.format(grop["url"], grop["message"]))
-                #except Exception as e:
-                #    print(f"Возникла ошибка: {e}")
-                await userbot.stop()
+        await userbot.stop()
+        start_spaming == False
